@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,6 +21,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.UUID;
+
 public class MainActivity extends AppCompatActivity {
 
     static final int DEFAULT_INTERVAL_MODIFIER = 30;
@@ -28,10 +33,13 @@ public class MainActivity extends AppCompatActivity {
     Switch sw_gps, sw_locationupdates;
 
     // Location request is a config file that stores all settings for FusedLocationProviderClient
-    LocationRequest locationRequest;
+    private LocationRequest locationRequest;
 
     // Google's API for location services
-    FusedLocationProviderClient locationProvider;
+    private FusedLocationProviderClient locationProvider;
+
+    private static String uniqueID = null;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         // Sets the accuracy/power usage for the location operation
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
+        id(this);
         updateGPS();
     }
 
@@ -118,5 +127,27 @@ public class MainActivity extends AppCompatActivity {
 
         if (location.hasSpeed()) tv_speed.setText(String.valueOf(location.getSpeed()));
         else tv_speed.setText("Not available");
+    }
+
+    /*
+    source: https://ssaurel.medium.com/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
+    generates a unique user id
+     */
+    public synchronized static String id(Context context) {
+
+        if (uniqueID == null) {
+
+            SharedPreferences sharedPrefs = context.getSharedPreferences(PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+            if (uniqueID == null) {
+
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(PREF_UNIQUE_ID, uniqueID);
+                editor.commit();
+            }
+        }
+
+        return uniqueID;
     }
 }
