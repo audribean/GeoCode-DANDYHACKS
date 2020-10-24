@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import static com.google.android.gms.location.FusedLocationProviderClient.*;
@@ -186,17 +187,32 @@ public class MainActivity extends AppCompatActivity {
             tv_speed.setText("Not available");
         }
 
-        Geocoder geocoder = new Geocoder(MainActivity.this);
+
+        Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
+
+
         try {
-            List <Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            tv_address.setText(addresses.get(0).getAddressLine(0));
-        }
-        catch(Exception e){
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
+            if (addresses.size() > 0) {
+                Address fetchedAddress = addresses.get(0);
+                StringBuilder strAddress = new StringBuilder();
+                for (int i = 0; i < fetchedAddress.getMaxAddressLineIndex(); i++) {
+                    strAddress.append(fetchedAddress.getAddressLine(i)).append(" ");
+                }
+
+                tv_address.setText(strAddress.toString());
+
+            } else {
+                tv_address.setText("Searching current address");;
+            }
+
+        } catch (Exception e) {
             tv_address.setText("Unable to get street address");
-
         }
-
     }
+
+
 
     /*
     source: https://ssaurel.medium.com/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
