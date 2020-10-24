@@ -64,10 +64,8 @@ public class MainActivity extends AppCompatActivity {
         tv_accuracy = findViewById(R.id.tv_accuracy);
         tv_speed = findViewById(R.id.tv_speed);
         tv_sensor = findViewById(R.id.tv_sensor);
-        tv_updates = findViewById(R.id.tv_updates);
         tv_address = findViewById(R.id.tv_address);
         sw_gps = findViewById(R.id.sw_gps);
-        sw_locationupdates = findViewById(R.id.sw_locationsupdates);
 
         //set all properties of LocationRequest
         locationRequest = new LocationRequest();
@@ -94,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         sw_gps.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
                 if (sw_gps.isChecked()) {
                     //most accurate - use GPS
@@ -106,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
 
 
 
@@ -159,9 +157,18 @@ public class MainActivity extends AppCompatActivity {
         // if our SDK Version is >= the phones version code -- requests permission for location
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
+        } else {
+            tv_updates.setText("Error in fnding location");
+            tv_lat.setText("Error in fnding location");
+            tv_lon.setText("Error in fnding location");
+            tv_accuracy.setText("Error in fnding accuracy");
+            tv_address.setText("Error in fnding location");
+            tv_sensor.setText("Error in finding accuracy");
+            tv_altitude.setText("Error in fnding altitude");
+            tv_speed.setText("Error in fnding speed");
         }
-
     }
+
 
 
     private void updateUIValues(Location location) {
@@ -179,6 +186,15 @@ public class MainActivity extends AppCompatActivity {
             tv_speed.setText("Not available");
         }
 
+        Geocoder geocoder = new Geocoder(MainActivity.this);
+        try {
+            List <Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            tv_address.setText(addresses.get(0).getAddressLine(0));
+        }
+        catch(Exception e){
+            tv_address.setText("Unable to get street address");
+
+        }
 
     }
 

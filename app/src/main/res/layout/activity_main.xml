@@ -110,7 +110,7 @@
         android:layout_marginStart="116dp"
         android:layout_marginLeft="116dp"
         android:layout_marginTop="16dp"
-        android:text="Sensor:"
+        android:text="Signal Source:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sw_gps" />
 
@@ -122,47 +122,16 @@
         app:layout_constraintStart_toEndOf="@+id/tv_labelsensor"
         app:layout_constraintTop_toTopOf="@+id/tv_labelsensor" />
 
-    <TextView
-        android:id="@+id/tv_labelupdates"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
-        android:layout_marginLeft="116dp"
-        android:layout_marginTop="16dp"
-        android:text="Updates:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sw_locationsupdates" />
-
-    <TextView
-        android:id="@+id/tv_updates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Location is being tracked"
-        app:layout_constraintStart_toEndOf="@+id/tv_labelupdates"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelupdates" />
-
-    <Switch
-        android:id="@+id/sw_locationsupdates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:checked="true"
-        android:text="Location Updates"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.937"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
-
     <Switch
         android:id="@+id/sw_gps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="110dp"
         android:text="GPS/SavePower"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.896"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelupdates" />
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <TextView
         android:id="@+id/tv_address"
