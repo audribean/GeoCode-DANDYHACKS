@@ -9,19 +9,27 @@ import android.content.SharedPreferences;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.List;
 import java.util.UUID;
+
+import static com.google.android.gms.location.FusedLocationProviderClient.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,8 +43,10 @@ public class MainActivity extends AppCompatActivity {
     // Location request is a config file that stores all settings for FusedLocationProviderClient
     private LocationRequest locationRequest;
 
+    LocationCallback locationCallback;
+
     // Google's API for location services
-    private FusedLocationProviderClient locationProvider;
+    FusedLocationProviderClient locationProvider;
 
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
@@ -59,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         sw_gps = findViewById(R.id.sw_gps);
         sw_locationupdates = findViewById(R.id.sw_locationsupdates);
 
+        //set all properties of LocationRequest
         locationRequest = new LocationRequest();
 
         // How often the default location check is triggered
@@ -70,9 +81,39 @@ public class MainActivity extends AppCompatActivity {
         // Sets the accuracy/power usage for the location operation
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
+        //event that is triggered whenever the interval is not
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                // save the location
+                Location location = locationResult.getLastLocation();
+                updateUIValues(location);
+            }
+        };
+
+        sw_gps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sw_gps.isChecked()) {
+                    //most accurate - use GPS
+                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    tv_sensor.setText("Using GPS sensors");
+                } else {
+                    locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                    tv_sensor.setText(("Using Towers + Wifi"));
+                }
+            }
+
+        });
+
+
+
+
         id(this);
         updateGPS();
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -103,19 +144,27 @@ public class MainActivity extends AppCompatActivity {
             locationProvider.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
+                    //if location is null then app will go kaput (ex. no signal, no permission)
+                    if (location == null) {
+                        location = new Location("");
+                    } else {
+                        updateUIValues(location);
+                    }
 
-                    updateUIValues(location);
                 }
             });
+
+
         }
         // if our SDK Version is >= the phones version code -- requests permission for location
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
         }
+
     }
 
-    private void updateUIValues(Location location) {
 
+    private void updateUIValues(Location location) {
         // updates all text values for UI elements to their respectively values
         tv_lat.setText(String.valueOf(location.getLatitude()));
         tv_lon.setText(String.valueOf(location.getLongitude()));
@@ -126,7 +175,11 @@ public class MainActivity extends AppCompatActivity {
         else tv_altitude.setText("Not available");
 
         if (location.hasSpeed()) tv_speed.setText(String.valueOf(location.getSpeed()));
-        else tv_speed.setText("Not available");
+        else {
+            tv_speed.setText("Not available");
+        }
+
+
     }
 
     /*
