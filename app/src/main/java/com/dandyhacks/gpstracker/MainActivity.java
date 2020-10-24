@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // all UI elements found by ID
         tv_lat = findViewById(R.id.tv_lat);
         tv_lon = findViewById(R.id.tv_lon);
         tv_altitude = findViewById(R.id.tv_altitude);
@@ -81,11 +82,15 @@ public class MainActivity extends AppCompatActivity {
 
         locationProvider = LocationServices.getFusedLocationProviderClient(MainActivity.this);
 
+        // Checks to see if the app has permissions to access precise (fine) location
         int isFineLocationOn = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+        // Int that represents the if a permission is granted
         int permissionsCheck = PackageManager.PERMISSION_GRANTED;
 
         if (isFineLocationOn == permissionsCheck) {
 
+            // Get last location, on success, it will update UI elements with location data
             locationProvider.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        // if our SDK Version is >= the phones version code -- requests permission for location
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
         }
@@ -101,10 +107,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUIValues(Location location) {
 
+        // updates all text values for UI elements to their respectively values
         tv_lat.setText(String.valueOf(location.getLatitude()));
         tv_lon.setText(String.valueOf(location.getLongitude()));
         tv_accuracy.setText(String.valueOf(location.getAccuracy()));
 
+        // Some phones don't have altitude or speed, so we need to check before calling their methods
         if (location.hasAccuracy()) tv_altitude.setText(String.valueOf(location.getAltitude()));
         else tv_altitude.setText("Not available");
 
