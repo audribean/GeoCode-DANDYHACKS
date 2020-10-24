@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
 
-                tv_address.setText("Searching current address");;
+                tv_address.setText("Searching current address");
             }
 
         } catch (Exception e) {
