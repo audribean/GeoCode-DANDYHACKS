@@ -170,8 +170,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void updateUIValues(Location location) {
         // updates all text values for UI elements to their respectively values
         tv_lat.setText(String.valueOf(location.getLatitude()));
@@ -195,20 +193,18 @@ public class MainActivity extends AppCompatActivity {
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
             if (addresses.size() > 0) {
-                Address fetchedAddress = addresses.get(0);
-                StringBuilder strAddress = new StringBuilder();
-                for (int i = 0; i < fetchedAddress.getMaxAddressLineIndex(); i++) {
-                    strAddress.append(fetchedAddress.getAddressLine(i)).append(" ");
-                }
-
-                tv_address.setText(strAddress.toString());
+                String fetchedAddress = addresses.get(0).getAddressLine(0);
+                tv_address.setText(fetchedAddress);
 
             } else {
+
                 tv_address.setText("Searching current address");;
             }
 
         } catch (Exception e) {
             tv_address.setText("Unable to get street address");
+            //code to print error in address if it errors out again
+            // .setText(e.getMessage());
         }
     }
 
