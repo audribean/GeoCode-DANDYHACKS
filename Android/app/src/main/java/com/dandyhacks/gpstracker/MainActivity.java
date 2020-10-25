@@ -26,9 +26,18 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static com.google.android.gms.location.FusedLocationProviderClient.*;
 
@@ -110,6 +119,31 @@ public class MainActivity extends AppCompatActivity {
 
 
         id(this);
+
+        /*
+        //How to use HttpUtils
+        HttpUtils example = new HttpUtils();
+        //example.buildUserPostRequest("ff7dffc4-f967-4deb-a943-393523740ec9");
+        //example.buildSymptomsPostRequest("ff7dffc4-f967-4deb-a943-393523740ec9",4,false);
+        final String[] theReponse = {""};
+        GetRequestListener mListener = new GetRequestListener() {
+            @Override
+            public String onSuccess(String response) {
+                theReponse[0] = response;
+                return response;
+            }
+            @Override
+            public String onFailure(String errorMessage) {
+                theReponse[0] = null;
+                return errorMessage;
+            }
+        };
+        System.out.println(theReponse[0]);
+        example.registerOnGetRequestEventListener(mListener);
+        example.buildGetRequest("user","ff7dffc4-f967-4deb-a943-393523740ec9", null);
+         */
+
+
         updateGPS();
     }
 
