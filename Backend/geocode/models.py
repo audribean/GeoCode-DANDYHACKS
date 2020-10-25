@@ -3,7 +3,7 @@ from django.core.validators import MaxValueValidator
 
 
 class GPS(models.Model):
-    uuid = models.CharField(max_length=36, blank=False, null=False)
+    uuid = models.IntegerField(max_length=32, blank=False, null=False)
     date = models.DateField(auto_now_add=True)
     address = models.CharField(max_length=50, blank=False, null=False)
     city = models.CharField(max_length=25, blank=False, null=False)
@@ -12,10 +12,10 @@ class GPS(models.Model):
 
 
 class Symptoms(models.Model):
-    uuid = models.CharField(max_length=36, blank=False, null=False)
+    uuid = models.IntegerField(max_length=32, blank=False, null=False)
     date = models.DateField(auto_now_add=True)
     score = models.IntegerField(validators=[MaxValueValidator(19)])
     close_contact = models.BooleanField(blank=False, null=False)
 
 class Users(models.Model):
-    uuid = models.CharField(max_length=36, unique=True, blank=False, null=False)
+    uuid = models.IntegerField(max_length=32, unique=True, blank=False, null=False)
