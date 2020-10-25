@@ -36,11 +36,11 @@ class PingView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UsersView(View):
-    def get(self, request, id=None, *args, **kwargs):
-        if id is None:
+    def get(self, request, uuid=None, *args, **kwargs):
+        if uuid is None:
             users = list(Users.objects.values())
         else:
-            users = list(Users.objects.filter(id=id).values())
+            users = list(Users.objects.filter(uuid=uuid).values())
         return JsonResponse(users, safe=False)
 
     @retry_on_exception(3)
@@ -54,10 +54,10 @@ class UsersView(View):
 
     @retry_on_exception(3)
     @atomic
-    def delete(self, request, id=None, *args, **kwargs):
-        if id is None:
+    def delete(self, request, uuid=None, *args, **kwargs):
+        if uuid is None:
             return HttpResponse(status=404)
-        Users.objects.filter(id=id).delete()
+        Users.objects.filter(uuid=uuid).delete()
         return HttpResponse(status=200)
 
     # The PUT method is shadowed by the POST method, so there doesn't seem
@@ -65,11 +65,11 @@ class UsersView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class GPSView(View):
-    def get(self, request, id=None, *args, **kwargs):
-        if id is None:
+    def get(self, request, uuid=None, *args, **kwargs):
+        if uuid is None:
             gps = list(GPS.objects.values())
         else:
-            gps = list(GPS.objects.filter(id=id).values())
+            gps = list(GPS.objects.filter(uuid=uuid).values())
         return JsonResponse(gps, safe=False)
 
     @retry_on_exception(3)
@@ -86,11 +86,11 @@ class GPSView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class SymptomsView(View):
-    def get(self, request, id=None, *args, **kwargs):
-        if id is None:
+    def get(self, request, uuid=None, *args, **kwargs):
+        if uuid is None:
             symptoms = list(Symptoms.objects.values())
         else:
-            symptoms = list(Symptoms.objects.filter(id=id).values())
+            symptoms = list(Symptoms.objects.filter(uuid=uuid).values())
         return JsonResponse(symptoms, safe=False)
 
     @retry_on_exception(3)

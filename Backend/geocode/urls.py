@@ -32,7 +32,6 @@ urlpatterns = [
     path('gps/<int:uuid>/', GPSView.as_view(), name='gps'),
 
     # Endpoints for symptoms URL.
-    path('symptoms/', SymptomsView.as_view(), name='gps'),
-    path('symptoms/<int:uuid>/', SymptomsView.as_view(), name='gps'),
-
-]
+    path('symptoms/', SymptomsView.as_view(), name='symptoms'),
+    path('symptoms/<int:uuid>/', SymptomsView.as_view(), name='symptoms'),
+    ]
